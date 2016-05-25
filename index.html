@@ -1,0 +1,526 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Getting to know what affects your pagespeed</title>
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/black.css" id="theme">
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:800,600' rel='stylesheet' type='text/css'>
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<img style="position:absolute; bottom:20px; left:calc( 50% - 50px);" src="img/logo_footer_white.svg">
+			
+			<div class="slides">
+				<section>
+					<h1 style="font-size:3.3em; margin-top:50px;">Page <span style="color:#37aecc;">speed</span></h1>
+					<h3>Getting to know what affects your pagespeed</h3>
+					<p>
+						<small>ruud@yard.nl / <a href="http://twitter.com/Ruud_Laan">@Ruud_Laan</a></small>
+					</p>
+					<aside class="notes">
+                       <ul>
+                           <li>Theme development by Yard</li>
+                           <li>Naam</li>
+                           <li>Werk als front-end developer</li>
+                           <li>We zijn opnieuw blij dat we hier mogen staan</li>
+                       </ul>
+					</aside>
+				</section>
+				<section>
+					<h2>What is it?</h2>
+					<p class="fragment">
+						Page speed is often confused with "site speed," which is actually the page speed for a sample of page views on a site. Page speed can be described in either "page load time" (the time it takes to fully display the content on a specific page) or "time to first byte" (how long it takes for your browser to receive the first byte of information from the web server). 
+					</p>
+				</section>
+				<section>
+					<h2>Why does it matter?</h2>
+					<section>
+						<p class="fragment">User interactions and satisfaction</p>
+						<p class="fragment">Search engine page ranking => translates to more users</p>
+					</section>
+					<section>
+						<p>
+							<quote>
+							"Microsoft speed specialist and computer scientist Harry Shum believes 0.25 seconds of difference in page load time – faster or slower – is the magic number dictating competitive advantages for online businesses."
+							</quote>
+						</p>
+					</section>
+					<section>
+						<br>
+						<ul>
+							<li>1 in 4 visitors would abandon the website if it takes more than 4 seconds to load.</li>
+							<li>46 percent of users don’t revisit poorly performing websites.</li>
+							<li>Website owners have mere 5 seconds to engage visitors before they consider leaving.</li> 
+							<li>74 percent of users accessing the mobile site would leave if it takes longer than 5 seconds to load.</li> 
+							<li>Every one-second delay in page load time could lead to $1.6 billion in annual losses for online merchants as big as Amazon.</li>
+						</ul>
+						</p>
+					</section>
+					<section>
+						<br>
+						<ul>
+							<li>47 percent of ecommerce customers expect page load times of less than two seconds before they consider leaving</li> 
+							<li>40 percent of users would abandon the site at the third second of waiting, before a performance analytics tool even captures their presence on the site.</li> 
+							<li>The average peak load time for conversions is mere 2 seconds – faster than millions of websites out there.</li>
+						</ul>
+					</section>
+				</section>
+				<section>
+					<h2>Which factors are relevant for the pagespeed?</h2>
+					<ul>
+						<li>Number of resources on the page</li>
+						<li>Javascript</li>
+						<li>PHP</li>
+						<li>Protocols</li>
+						<li>Server (hardware)</li>
+						<li>Server (software)</li>
+						<li>Caching</li>
+						<li>Minify/optimizations</li>
+					</ul>
+				</section>
+				<section>
+					<h3>Number of resources on the page</h3>
+					<section>
+						Why relevant?
+						<pre class="fragment">
+	Number of parallel requests by browser per server/proxy
+
+			IE 6 and 7:      2
+			IE 8:            6
+			IE 9:            6
+			IE 10:           8
+			IE 11:           8
+			Firefox 2:       2
+			Firefox 3:       6
+			Firefox 4 to 17: 6
+			Opera 9.63:      4
+			Opera 10:        8
+			Opera 11 and 12: 6
+			Chrome 1 and 2:  6
+			Chrome 3:        4
+			Chrome 4 to 23:  6
+			Safari 3 and 4:  4
+						</pre>
+					</section>
+					<section>
+						Images
+						<p class="fragment">
+							Use 'sprites'
+						</p>
+						<p class="fragment">
+							'Lazy loading' of images
+						</p>
+					</section>
+					<section>
+						Videos
+						<p class="fragment">
+							'ajaxify' loading of actual video
+						</p>
+					</section>
+					<section>
+						Fonts
+						<p class="fragment">
+							use system fonts
+						</p>
+					</section>
+					<section>
+						<br>
+						CSS / Javascript
+						<p class="fragment">
+							concatenate CSS / Javascript files
+						</p>
+						<p class="fragment">
+							dequeue styles/scripts when applicable
+						</p>
+						<pre class="fragment">
+						<code class="hljs javascript" contenteditable="false" data-trim="false">
+add_action( 'wp_enqueue_scripts', 'ddw_cf7_cleanup' );
+function ddw_cf7_cleanup() {
+	/** Dequeue globally enqueued scripts & styles */
+	wp_dequeue_script( 'contact-form-7' );
+	wp_dequeue_style( 'contact-form-7' );
+	/** Only enqueue stuff on the used page ID */
+	if ( is_page( '12' ) ) {
+		wp_enqueue_script( 'contact-form-7' );
+		wp_enqueue_style( 'contact-form-7' );
+	}  // end if
+}  // end function
+						</code>
+						</pre>
+					</section>
+				</section>
+				<section>
+					<h3>Javascript</h3>
+					<section>
+						<pre class="fragment">
+<code class="hljs javascript" contenteditable="false" data-trim="false">
+<!-- HTML5 -->
+<script src="javascript.js"></script>
+</code>
+						</pre>
+						<p class="fragment">
+							<img alt="" src="img/script.svg">
+							<br>
+							<img alt="" src="img/legend.svg">
+						</p>
+					</section>	
+					<section>
+						<br>
+						<small class="fragment">
+							async downloads the file during HTML parsing and will pause the HTML parser to execute it when it has finished downloading.
+						</small>
+						<pre class="fragment">
+<code class="hljs javascript" contenteditable="false" data-trim="false">
+<!-- HTML5 -->
+<script async="async" src="javascript.js"></script>
+</code>
+						</pre>
+						<p class="fragment">
+							<img alt="" src="img/script-async.svg">
+							<br>
+							<img alt="" src="img/legend.svg">
+						</p>
+					</section>	
+					<section>
+						<br>
+						<small class="fragment">
+							defer downloads the file during HTML parsing and will only execute it after the parser has completed. 
+							defer scripts are also guarenteed to execute in the order that they appear in the document.
+						</small>
+						<pre class="fragment">
+<code class="hljs javascript" contenteditable="" data-trim="">
+<!-- HTML5 -->
+<script defer="defer" src="javascript.js"></script>
+</code>
+						</pre>
+						<p class="fragment">
+							<img alt="" src="img/script-defer.svg">
+							<br>
+							<img alt="" src="img/legend.svg">
+						</p>
+					</section>	
+				</section>
+				<section>
+					<h3>PHP version</h3>
+					<section>
+						<img class="fragment" alt="" src="img/WordPress-PHP-5.6-vs-HHVM-3.7-vs-PHP-7.jpg">
+					</section>
+					<section>
+						<br>
+						<small>PHP code optimizations</small>
+						<p class="fragment">						
+							Echo with comma's
+						</p>
+						<p class="fragment">
+						++$i ipv $i++
+						</p> 
+						<p class="fragment">
+						switch ipv if/elseif/elseif
+						</p>
+						<p class="fragment">
+						echo vs print
+						</p>
+						<p class="fragment">
+						initialize local var
+						</p>
+						<p class="fragment">
+						strings met single quote (') zijn sneller (want niet gecheckt op gebruik variables)
+						</p>
+					</section>
+					<section>
+						<br>
+						<small>PHP code optimizations (part 2)</small>
+						<p class="fragment">
+						declare static methods static (4x sneller)
+						</p>
+						<p class="fragment">
+						regex 'duur': str_replace is faster than preg_replace, but strtr is faster than str_replace by a factor of 4
+						</p> 
+						<p class="fragment">
+						Not everything has to be OOP, often it is too much overhead, each method and object call consumes a lot of memory.
+						</p> 
+						<p class="fragment">
+						Use full file paths on include/require statements.
+						</p> 
+						<p class="fragment">
+						More => https://gist.github.com/bsalim/4442047
+						</p>
+					</section>
+				</section>
+				<section>
+					<h3>Protocols + encryption</h3>
+					<section>
+						<p>
+						What is HTTP/2?
+						</p>
+						<p>
+						HTTP/2 is the first upgrade to the Hypertext Transfer Protocol since 1999. It’s goal is to improve website performance by optimizing how HTTP is expressed “on-the-wire.” It doesn’t change the semantics of HTTP, which means header fields, status codes, and cookies work exactly the same way as in HTTP/1.1.
+						</p>
+					</section>
+					<section>	
+						<p>
+						HTTP/2 began its life as Google’s SPDY protocol, which they designed to address many of the performance problems inherent in HTTP/1.1. The core benefits of SPDY have made their way into HTTP/2, improved by the global Internet community, and formalized into an Internet Standard.
+						Benefits of HTTP/2
+						</p>
+					</section>
+					<section>	
+						<p>
+						HTTP/2 introduces several new features, and they’re all designed to improve page load times for your website visitors.
+						Multiplexing
+						</p>
+					</section>
+					<section>	
+						<p>
+						Multiplexing is perhaps the most significant benefit of HTTP/2. HTTP/1.1 requires each request to use its own TCP connection. Multiplexing, in contrast, allows a browser to include multiple requests in a single TCP connection.
+						</p>
+					</section>
+					<section>
+						<img alt="" src="/img/http2-multiplexing.png">
+					</section>
+					<section>
+						<img alt="" src="/img/http2-network-graph-comparison.png">
+					</section>
+					<section>
+						SSL (or actually TLS) vs Non-encrypted
+						<p class="fragment">
+							Is SSL/TLS computationally expensive??
+						</p>
+						<p class="fragment">
+							When Google switched Gmail to use HTTPS, no additional resources were required; no network hardware, no new hosts. It only increased CPU load by about 1%, less than 10KB of memory per connection and less than 2% of network overhead.
+						</p>
+					</section>
+				</section>
+				<section>
+					<h3>Server (hardware)</h3>
+					<p class="fragment">
+						CPU
+					</p>
+					<p class="fragment">
+						Memory
+					</p>
+					<p class="fragment">
+						Disk (SSD vs HDD)
+					</p>
+					<p class="fragment">
+						Number of sites on server 
+					</p>
+				</section>		
+				<section>
+					<h3>Server (software)</h3>
+					<section>
+						<br>
+						<small>
+							Apache vs Nginx vs lightppd: geheugen
+						</small>
+						<br>
+						<img alt="" src="/img/Webserver_memory_graph.jpg">
+					</section>
+					<section>
+						<br>
+						<small>
+							Apache vs Nginx vs lightppd: requests
+						</small>
+						<br>
+						<img alt="" src="/img/Webserver_requests_graph.jpg">
+					</section>
+			</section>
+			<section>
+				<h3>Caching</h3>
+				<section>
+					<h4>Varnish</h4>
+					<small>
+						You install it in front of any server that speaks HTTP and configure it to cache the contents. Varnish Cache is really, really fast. It typically speeds up delivery with a factor of 300 - 1000x, depending on your architecture.
+					</small>
+					<img alt="" src="/img/varnish-bunny.png">
+				</section>
+				<section>
+					<h4>FastCGI</h4>
+					<small>
+						Similar to Varnish, mostly used in combination with Nginx
+					</small>	
+				</section>
+				<section>		
+					<h4>Transients</h4>
+					<pre>
+						<code contenteditable="false" data-trim="false">
+
+set_transient( 'meetup-location', 'Grebbeberglaan 15', DAY_IN_SECONDS );
+
+$meetup-location = get_transient( 'meetup-location' );
+
+						</code>
+					</pre>
+				</section>
+				<section>
+					<br>
+					<h4>Browser caching</h4>
+					<small>
+					If you set an expiry date or a maximum age in the HTTP headers for static resources, modern browsers will load previously downloaded static resources like images, css, javascript, pdf, swf etc. from local disks rather than over the network.
+					</small>
+					<pre>
+						<code contenteditable="false" data-trim="false">
+## EXPIRES CACHING ##
+<IfModule mod_expires.c>
+ExpiresActive On
+ExpiresByType image/jpg "access 1 year"
+ExpiresByType image/jpeg "access 1 year"
+ExpiresByType image/gif "access 1 year"
+ExpiresByType image/png "access 1 year"
+ExpiresByType text/css "access 1 month"
+ExpiresByType text/html "access 1 month"
+ExpiresByType application/pdf "access 1 month"
+ExpiresByType text/x-javascript "access 1 month"
+ExpiresByType application/x-shockwave-flash "access 1 month"
+ExpiresByType image/x-icon "access 1 year"
+ExpiresDefault "access 1 month"
+</IfModule>
+## EXPIRES CACHING ##					
+						</code>
+					</pre>			
+				</section>
+				<section>
+					<br>
+					<h4>Content Delivery Network (CDN)</h4>
+					<small>
+						works by providing alternative server nodes for users to download resources (usually static content like images and JavaScript). These nodes spread throughout the world, therefore being geographically closer to your users, ensuring a faster response and download time of content due to reduced latency.
+					</small>
+					<img class="fragment" alt="" src="/img/cdn-example.png"> 
+				</section>
+				<section>
+					<h4>Proton (via Jetpack)</h4>
+					<p>
+						Photon is an image acceleration and editing service for sites hosted on WordPress.com or on Jetpack-connected WordPress sites. That means less load on your host and faster images for your readers.
+					</p>
+					<small>
+					<ul>
+						<li>
+							
+							From the Jetpack page in your blog dashboard, click the Activate button for Photon.
+							
+						</li>
+						<li>
+							You’re done! Your images will now be served dynamically from the global WordPress.com cloud.
+						</li>
+					</ul>
+					</small>
+    			</section>
+			</section>
+			<section>
+				<h3>Minify/optimizations</h3>
+				<section>
+					<h4>Choosing image types</h4>
+					<p class="fragment">
+						JPG						
+					</p>
+					<p class="fragment">
+						BPG
+					</p>
+					<p class="fragment">
+						PNG
+					</p>
+					<p class="fragment">
+						GIF
+					</p>
+					<p class="fragment">
+						SVG
+					</p>
+				</section>
+				<section>
+					<h4>BPG</h4>
+					<img class="fragment" alt="" src="/img/bpg.jpg">
+					<small class="fragment">http://xooyoozoo.github.io/yolo-octo-bugfixes/#pont-de-quebec-at-night&jpg=s&bpg=t</small>
+				</section>
+				<section>
+					<h4>JPG (JPEG)</h4>
+					<img class="fragment" alt="" src="/img/jpg-compression.png">
+				</section>
+				<section>
+					<br>
+					<h4>GIF</h4>
+					<img class="fragment" alt="" src="/img/gif.png">
+				</section>
+				<section>
+					<h4>SVG</h4>
+					<img class="fragment" alt="" src="/img/vatican-city-l.png" width="128" height="128">
+					<br>
+					<small class="fragment">png => 5,27Kb</small>
+					<br>
+					<img class="fragment" alt="" src="/img/vatican-city.svg" width="128" height="128">
+					<br>
+					<small class="fragment">svg => 183,58Kb</small>
+				</section>
+				<section>
+					<br>
+					<h4>SVG (part 2)</h4>
+					<img class="fragment" alt="" src="/img/vatican_detail.png">
+				</section>
+				<section>
+					<h4>Minimize image size</h4>
+					<p class="fragment">
+						removal of extra data ( via plugins )						
+					</p>
+					<small class="fragment">
+						<ul>
+							<li>
+								WP Smush (https://wordpress.org/plugins/wp-smushit/)
+							</li>
+							<li>
+								Kraken.io (https://wordpress.org/plugins/kraken-image-optimizer/)
+							</li>
+						</ul>
+					</small>
+				</section>
+			</section>
+			<section>
+				<h2>Thank you!</h2>
+				<p class="fragment">Vragen en/of opmerkingen?</p>
+				<p class="fragment">Ik hoor ze graag</p>
+				<p class="fragment">echt!</p>
+				<br><br><br><br><br><br>
+				<p class="fragment">
+					<small>Contact me at: ruud@yard.nl / or via Twitter: <a href="http://twitter.com/Ruud_Laan">@Ruud_Laan</a></small>
+				</p>
+			</section>
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				history: true,
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>
